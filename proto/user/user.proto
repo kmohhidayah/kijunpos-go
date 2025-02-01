@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package user;
+
+import "buf/validate/validate.proto";
+
+option go_package = "./user";
+
+service UserService {
+  rpc Register(RegisterRequest) returns (GeneralResponse) {}
+}
+
+message GeneralResponse {
+  string message = 1;
+  bool success = 2;
+}
+
+message RegisterRequest {
+  string name = 1 [
+    (buf.validate.field).string.min_len = 1,
+    (buf.validate.field).string.max_len = 100
+  ];
+  string email = 2 [(buf.validate.field).string.email = true];
+  string phone_number = 3 [
+    (buf.validate.field).string.min_len = 1,
+    (buf.validate.field).string.max_len = 100,
+    (buf.validate.field).string.pattern = "^\\+?[1-9][0-9]{7,14}$"
+  ];
+  string password = 4 [(buf.validate.field).string.min_len = 8];
+}

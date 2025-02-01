@@ -6,7 +6,6 @@ import (
 )
 
 func main() {
-	// init app
-	app.Init()
-	grpc.StartServer()
+	setupData := app.Init()
+	grpc.StartGrpcServer(setupData)
 }

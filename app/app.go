@@ -9,9 +9,10 @@ import (
 type SetupData struct {
 	ConfigData *config.Config
 	DBManager  *db.Manager
+	// Handler
 }
 
-func Init() SetupData {
+func Init() *SetupData {
 	// config init
 	if err := config.LoadConfig(); err != nil {
 		log.Fatalf("error when load config data, err: %v", err)
@@ -33,7 +34,7 @@ func Init() SetupData {
 	_ = kijunConn
 	// grpcServer := grpc.NewServer()
 
-	return SetupData{
+	return &SetupData{
 		ConfigData: configData,
 		DBManager:  dbManager,
 	}
