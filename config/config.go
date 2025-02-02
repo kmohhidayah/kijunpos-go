@@ -14,9 +14,18 @@ type (
 		Name    string
 		Version string
 	}
+	Otel struct {
+		ApiKey      string
+		Env         string
+		ServiceName string
+		URL         string
+		Insecure    bool
+		IsEnabled   bool
+	}
 
 	Config struct {
 		App       App
+		Otel      Otel
 		Databases []db.Config
 	}
 )
@@ -39,6 +48,14 @@ func LoadConfig() error {
 			Env:     getRequiredString("APP_ENV"),
 			Name:    getRequiredString("APP_NAME"),
 			Version: getRequiredString("APP_VERSION"),
+		},
+		Otel: Otel{
+			ApiKey:      getRequiredString("OTEL_API_KEY"),
+			Env:         getRequiredString("APP_ENV"),
+			ServiceName: fmt.Sprintf("%s-%s", getRequiredString("APP_NAME"), getRequiredString("APP_ENV")),
+			URL:         getRequiredString("OTEL_URL"),
+			Insecure:    getRequiredBool("OTEL_INSECURE"),
+			IsEnabled:   getRequiredBool("OTEL_IS_ENABLED"),
 		},
 		Databases: []db.Config{
 			{

@@ -11,3 +11,4 @@
 ## TODO:
 
 - [ ] Set Config using viper
+- [ ] Set RED Metrics
