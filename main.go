@@ -1,11 +1,15 @@
 package main
 
 import (
-	"github/kijunpos/app"
-	"github/kijunpos/cmd/grpc"
+	"github/kijunpos/internal/app"
+	"log"
 )
 
 func main() {
-	setupData := app.Init()
-	grpc.StartGrpcServer(setupData)
+	// Initialize the application
+	application := app.NewApplication()
+	
+	// Start the application
+	log.Println("Starting KijunPOS application...")
+	application.Start()
 }
