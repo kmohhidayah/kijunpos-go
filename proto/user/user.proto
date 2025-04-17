@@ -2,12 +2,13 @@ syntax = "proto3";
 
 package user;
 
-import "buf/validate/validate.proto";
-
 option go_package = "./user";
 
 service UserService {
   rpc Register(RegisterRequest) returns (GeneralResponse) {}
+  rpc Login(LoginRequest) returns (LoginResponse) {}
+  rpc ResetPIN(ResetPINRequest) returns (ResetPINResponse) {}
+  rpc VerifyPINReset(VerifyPINResetRequest) returns (GeneralResponse) {}
 }
 
 message GeneralResponse {
@@ -16,15 +17,46 @@ message GeneralResponse {
 }
 
 message RegisterRequest {
-  string name = 1 [
-    (buf.validate.field).string.min_len = 1,
-    (buf.validate.field).string.max_len = 100
-  ];
-  string email = 2 [(buf.validate.field).string.email = true];
-  string phone_number = 3 [
-    (buf.validate.field).string.min_len = 1,
-    (buf.validate.field).string.max_len = 100,
-    (buf.validate.field).string.pattern = "^\\+?[1-9][0-9]{7,14}$"
-  ];
-  string password = 4 [(buf.validate.field).string.min_len = 8];
+  string name = 1;
+  string email = 2;
+  string phone_number = 3;
+  string password = 4;
+}
+
+message LoginRequest {
+  // Auth type: "email" or "whatsapp"
+  string auth_type = 1;
+  // Identifier: username/email for email auth, phone number for whatsapp auth
+  string identifier = 2;
+  // Credential: password for email auth, PIN for whatsapp auth
+  string credential = 3;
+}
+
+message LoginResponse {
+  bool success = 1;
+  string message = 2;
+  UserData user = 3;
+}
+
+message UserData {
+  string id = 1;
+  string username = 2;
+  string email = 3;
+  string phone_number = 4;
+}
+
+message ResetPINRequest {
+  string phone_number = 1;
+}
+
+message ResetPINResponse {
+  bool success = 1;
+  string message = 2;
+  string verification_code = 3;
+}
+
+message VerifyPINResetRequest {
+  string phone_number = 1;
+  string verification_code = 2;
+  string new_pin = 3;
 }

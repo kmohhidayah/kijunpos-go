@@ -17,11 +17,13 @@ func (r *userRepository) Update(ctx context.Context, user *domain.User) error {
 			username = $2,
 			password_hash = $3,
 			email = $4,
-			is_active = $5,
-			failed_login_attempts = $6,
-			last_login_at = $7,
-			password_changed_at = $8,
-			updated_at = $9
+			whatsapp_number = $5,
+			pin = $6,
+			is_active = $7,
+			failed_login_attempts = $8,
+			last_login_at = $9,
+			password_changed_at = $10,
+			updated_at = $11
 		WHERE id = $1
 	`
 
@@ -32,6 +34,8 @@ func (r *userRepository) Update(ctx context.Context, user *domain.User) error {
 		user.UserName,
 		user.PasswordHash,
 		user.Email,
+		user.WhatsAppNumber,
+		user.PIN,
 		user.IsActive,
 		user.FailedLoginAttempts,
 		user.LastLoginAt,

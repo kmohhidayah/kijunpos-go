@@ -13,10 +13,10 @@ func (r *userRepository) Create(ctx context.Context, user *domain.User) error {
 
 	query := `
 		INSERT INTO users (
-			id, username, password_hash, email, is_active, 
+			id, username, password_hash, email, whatsapp_number, pin, is_active, 
 			failed_login_attempts, created_at
 		) VALUES (
-			$1, $2, $3, $4, $5, $6, $7
+			$1, $2, $3, $4, $5, $6, $7, $8, $9
 		)
 	`
 
@@ -27,6 +27,8 @@ func (r *userRepository) Create(ctx context.Context, user *domain.User) error {
 		user.UserName,
 		user.PasswordHash,
 		user.Email,
+		user.WhatsAppNumber,
+		user.PIN,
 		user.IsActive,
 		user.FailedLoginAttempts,
 		user.CreatedAt,

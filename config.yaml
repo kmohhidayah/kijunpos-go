@@ -1,0 +1,25 @@
+app:
+  port: 50051
+  env: development
+  name: kijunpos-go
+  version: 1.0.0
+
+otel:
+  apiKey: ""
+  env: development
+  serviceName: kijunpos-go
+  url: http://jaeger:4318
+  insecure: true
+  isEnabled: true
+
+databases:
+  - name: kijundb
+    host: postgres
+    port: 5432
+    user: ${DB_USER}
+    password: ${DB_PASSWORD}
+    dbname: ${DB_NAME}
+    sslmode: disable
+    maxIdleConns: 10
+    maxOpenConns: 100
+    connMaxLifetime: 1h

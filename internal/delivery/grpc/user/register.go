@@ -15,20 +15,30 @@ func (h *Handler) Register(ctx context.Context, req *pbUser.RegisterRequest) (*p
 	ctx, span := apm.GetTracer().Start(ctx, "delivery.grpc.user.Register")
 	defer span.End()
 
-	// Validate request
-	if req.Name == "" || req.Password == "" || req.Email == "" {
-		return nil, status.Error(codes.InvalidArgument, "name, password, and email are required")
+	// Determine registration type based on request
+	var authType domain.AuthType
+	params := make(map[string]string)
+
+	if req.PhoneNumber != "" {
+		// Register with WhatsApp (using phone number as WhatsApp number)
+		authType = domain.AuthTypeWhatsApp
+		params["whatsapp_number"] = req.PhoneNumber
+	} else if req.Email != "" && req.Password != "" {
+		// Register with Email
+		authType = domain.AuthTypeEmail
+		params["email"] = req.Email
+		params["password"] = req.Password
+	} else {
+		return nil, status.Error(codes.InvalidArgument, "either phone number or email and password are required")
 	}
 
-	// Create user domain object
-	user := &domain.User{
-		UserName:     req.Name,
-		PasswordHash: req.Password, // Will be hashed in the use case
-		Email:        req.Email,
+	// Validate username
+	if req.Name == "" {
+		return nil, status.Error(codes.InvalidArgument, "name is required")
 	}
 
 	// Call use case
-	_, err := h.userUseCase.Register(ctx, user)
+	_, err := h.userUseCase.Register(ctx, authType, req.Name, params)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
