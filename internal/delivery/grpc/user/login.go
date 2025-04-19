@@ -2,16 +2,14 @@ package user
 
 import (
 	"context"
+	pbUser "github/kijunpos/gen/proto/user"
 	"github/kijunpos/internal/domain"
 	"github/kijunpos/internal/pkg/apm"
-	pbUser "github/kijunpos/gen/proto/user"
-
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
+	"github/kijunpos/internal/pkg/errors"
 )
 
 // Login handles user authentication
-func (h *Handler) Login(ctx context.Context, req *pbUser.LoginRequest) (*pbUser.LoginResponse, error) {
+func (h *Handler) Login(ctx context.Context, req *pbUser.LoginRequest) (*pbUser.GeneralResponse, error) {
 	ctx, span := apm.GetTracer().Start(ctx, "delivery.grpc.user.Login")
 	defer span.End()
 
@@ -23,32 +21,40 @@ func (h *Handler) Login(ctx context.Context, req *pbUser.LoginRequest) (*pbUser.
 	case "whatsapp":
 		authType = domain.AuthTypeWhatsApp
 	default:
-		return nil, status.Error(codes.InvalidArgument, "invalid auth type")
+		return &pbUser.GeneralResponse{
+			Success: false,
+			Message: errors.NewBadRequestError("invalid auth type", nil).Error(),
+		}, nil
 	}
 
 	// Validate input
 	if req.Identifier == "" {
-		return nil, status.Error(codes.InvalidArgument, "identifier is required")
+		return &pbUser.GeneralResponse{
+			Success: false,
+			Message: errors.NewValidationError("identifier is required", nil).Error(),
+		}, nil
 	}
 	if req.Credential == "" {
-		return nil, status.Error(codes.InvalidArgument, "credential is required")
+		return &pbUser.GeneralResponse{
+			Success: false,
+			Message: errors.NewValidationError("credential is required", nil).Error(),
+		}, nil
 	}
 
 	// Call use case
-	user, err := h.userUseCase.Login(ctx, authType, req.Identifier, req.Credential)
+	_, err := h.userUseCase.Login(ctx, authType, req.Identifier, req.Credential)
 	if err != nil {
-		return nil, status.Error(codes.Unauthenticated, err.Error())
+		// Handle the error using the custom error package
+		errMsg := errors.HandleResponseError(ctx, span, err)
+		return &pbUser.GeneralResponse{
+			Success: false,
+			Message: errMsg,
+		}, nil
 	}
 
 	// Create response
-	return &pbUser.LoginResponse{
+	return &pbUser.GeneralResponse{
 		Success: true,
 		Message: "Login successful",
-		User: &pbUser.UserData{
-			Id:          user.ID.String(),
-			Username:    user.UserName,
-			Email:       user.Email,
-			PhoneNumber: user.WhatsAppNumber,
-		},
 	}, nil
 }

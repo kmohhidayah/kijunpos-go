@@ -62,7 +62,7 @@ func (uc *userUseCase) Register(ctx context.Context, authType domain.AuthType, u
 
 		// Set WhatsApp-specific fields
 		user.WhatsAppNumber = whatsAppNumber
-		user.PIN = temporaryPIN
+		user.OTPPIN = temporaryPIN
 
 	case domain.AuthTypeEmail:
 		// Get email and password from params
@@ -105,7 +105,7 @@ func (uc *userUseCase) Register(ctx context.Context, authType domain.AuthType, u
 
 	// Clear sensitive data before returning
 	user.PasswordHash = ""
-	user.PIN = ""
+	user.OTPPIN = ""
 	return user, nil
 }
 

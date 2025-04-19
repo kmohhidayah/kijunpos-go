@@ -4,10 +4,8 @@ import (
 	"context"
 	"github/kijunpos/internal/domain"
 	"github/kijunpos/internal/pkg/apm"
+	"github/kijunpos/internal/pkg/errors"
 	pbUser "github/kijunpos/gen/proto/user"
-
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 // Register handles user registration
@@ -29,22 +27,19 @@ func (h *Handler) Register(ctx context.Context, req *pbUser.RegisterRequest) (*p
 		params["email"] = req.Email
 		params["password"] = req.Password
 	} else {
-		return nil, status.Error(codes.InvalidArgument, "either phone number or email and password are required")
+		return errors.NewErrorResponse("Either phone number or email and password are required"), nil
 	}
 
 	// Validate username
 	if req.Name == "" {
-		return nil, status.Error(codes.InvalidArgument, "name is required")
+		return errors.NewErrorResponse("Name is required"), nil
 	}
 
 	// Call use case
 	_, err := h.userUseCase.Register(ctx, authType, req.Name, params)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return errors.MapErrorToResponse(ctx, span, err)
 	}
 
-	return &pbUser.GeneralResponse{
-		Success: true,
-		Message: "User registered successfully",
-	}, nil
+	return errors.NewSuccessResponse("User registered successfully"), nil
 }

@@ -5,12 +5,20 @@ import (
 )
 
 type userUseCase struct {
-	userRepo domain.UserRepository
+	userRepo             domain.UserRepository
+	verificationRepo     domain.VerificationRepository
+	emailService         domain.EmailService
 }
 
 // NewUserUseCase creates a new user use case
-func NewUserUseCase(userRepo domain.UserRepository) domain.UserUseCase {
+func NewUserUseCase(
+	userRepo domain.UserRepository,
+	verificationRepo domain.VerificationRepository,
+	emailService domain.EmailService,
+) domain.UserUseCase {
 	return &userUseCase{
-		userRepo: userRepo,
+		userRepo:         userRepo,
+		verificationRepo: verificationRepo,
+		emailService:     emailService,
 	}
 }

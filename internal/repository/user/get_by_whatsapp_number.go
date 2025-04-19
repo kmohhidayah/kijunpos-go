@@ -28,7 +28,7 @@ func (r *userRepository) GetByWhatsAppNumber(ctx context.Context, whatsAppNumber
 		&user.PasswordHash,
 		&user.Email,
 		&user.WhatsAppNumber,
-		&user.PIN,
+		&user.OTPPIN,
 		&user.IsActive,
 		&user.FailedLoginAttempts,
 		&user.CreatedAt,

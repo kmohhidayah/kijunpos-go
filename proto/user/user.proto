@@ -6,9 +6,9 @@ option go_package = "./user";
 
 service UserService {
   rpc Register(RegisterRequest) returns (GeneralResponse) {}
-  rpc Login(LoginRequest) returns (LoginResponse) {}
-  rpc ResetPIN(ResetPINRequest) returns (ResetPINResponse) {}
-  rpc VerifyPINReset(VerifyPINResetRequest) returns (GeneralResponse) {}
+  rpc Login(LoginRequest) returns (GeneralResponse) {}
+  rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse) {}
+  rpc VerifyPasswordReset(VerifyPasswordResetRequest) returns (GeneralResponse) {}
 }
 
 message GeneralResponse {
@@ -32,12 +32,6 @@ message LoginRequest {
   string credential = 3;
 }
 
-message LoginResponse {
-  bool success = 1;
-  string message = 2;
-  UserData user = 3;
-}
-
 message UserData {
   string id = 1;
   string username = 2;
@@ -45,18 +39,19 @@ message UserData {
   string phone_number = 4;
 }
 
-message ResetPINRequest {
-  string phone_number = 1;
+message ResetPasswordRequest {
+  string email = 1;
 }
 
-message ResetPINResponse {
+message ResetPasswordResponse {
   bool success = 1;
   string message = 2;
-  string verification_code = 3;
+  string verification_code = 3; // for testing purposes only
 }
 
-message VerifyPINResetRequest {
-  string phone_number = 1;
+message VerifyPasswordResetRequest {
+  string email = 1;
   string verification_code = 2;
-  string new_pin = 3;
+  string confirmation_password = 3;
+  string new_password = 4;
 }

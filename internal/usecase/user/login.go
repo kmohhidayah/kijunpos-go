@@ -77,7 +77,7 @@ func (uc *userUseCase) Login(ctx context.Context, authType domain.AuthType, iden
 		}
 
 		// Verify PIN
-		if user.PIN != credential {
+		if user.OTPPIN != credential {
 			// Increment failed login attempts
 			user.FailedLoginAttempts++
 			_ = uc.userRepo.Update(ctx, user) // Ignore error for simplicity
@@ -100,6 +100,6 @@ func (uc *userUseCase) Login(ctx context.Context, authType domain.AuthType, iden
 
 	// Clear sensitive data before returning
 	user.PasswordHash = ""
-	user.PIN = ""
+	user.OTPPIN = ""
 	return user, nil
 }

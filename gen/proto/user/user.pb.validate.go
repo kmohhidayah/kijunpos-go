@@ -352,139 +352,6 @@ var _ interface {
 	ErrorName() string
 } = LoginRequestValidationError{}
 
-// Validate checks the field values on LoginResponse with the rules defined in
-// the proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *LoginResponse) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on LoginResponse with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in LoginResponseMultiError, or
-// nil if none found.
-func (m *LoginResponse) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *LoginResponse) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Success
-
-	// no validation rules for Message
-
-	if all {
-		switch v := interface{}(m.GetUser()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, LoginResponseValidationError{
-					field:  "User",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, LoginResponseValidationError{
-					field:  "User",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetUser()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return LoginResponseValidationError{
-				field:  "User",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if len(errors) > 0 {
-		return LoginResponseMultiError(errors)
-	}
-
-	return nil
-}
-
-// LoginResponseMultiError is an error wrapping multiple validation errors
-// returned by LoginResponse.ValidateAll() if the designated constraints
-// aren't met.
-type LoginResponseMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m LoginResponseMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m LoginResponseMultiError) AllErrors() []error { return m }
-
-// LoginResponseValidationError is the validation error returned by
-// LoginResponse.Validate if the designated constraints aren't met.
-type LoginResponseValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e LoginResponseValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e LoginResponseValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e LoginResponseValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e LoginResponseValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e LoginResponseValidationError) ErrorName() string { return "LoginResponseValidationError" }
-
-// Error satisfies the builtin error interface
-func (e LoginResponseValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sLoginResponse.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = LoginResponseValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = LoginResponseValidationError{}
-
 // Validate checks the field values on UserData with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -592,44 +459,44 @@ var _ interface {
 	ErrorName() string
 } = UserDataValidationError{}
 
-// Validate checks the field values on ResetPINRequest with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *ResetPINRequest) Validate() error {
+// Validate checks the field values on ResetPasswordRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ResetPasswordRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ResetPINRequest with the rules
+// ValidateAll checks the field values on ResetPasswordRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// ResetPINRequestMultiError, or nil if none found.
-func (m *ResetPINRequest) ValidateAll() error {
+// ResetPasswordRequestMultiError, or nil if none found.
+func (m *ResetPasswordRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ResetPINRequest) validate(all bool) error {
+func (m *ResetPasswordRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	// no validation rules for PhoneNumber
+	// no validation rules for Email
 
 	if len(errors) > 0 {
-		return ResetPINRequestMultiError(errors)
+		return ResetPasswordRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// ResetPINRequestMultiError is an error wrapping multiple validation errors
-// returned by ResetPINRequest.ValidateAll() if the designated constraints
-// aren't met.
-type ResetPINRequestMultiError []error
+// ResetPasswordRequestMultiError is an error wrapping multiple validation
+// errors returned by ResetPasswordRequest.ValidateAll() if the designated
+// constraints aren't met.
+type ResetPasswordRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ResetPINRequestMultiError) Error() string {
+func (m ResetPasswordRequestMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -638,11 +505,11 @@ func (m ResetPINRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ResetPINRequestMultiError) AllErrors() []error { return m }
+func (m ResetPasswordRequestMultiError) AllErrors() []error { return m }
 
-// ResetPINRequestValidationError is the validation error returned by
-// ResetPINRequest.Validate if the designated constraints aren't met.
-type ResetPINRequestValidationError struct {
+// ResetPasswordRequestValidationError is the validation error returned by
+// ResetPasswordRequest.Validate if the designated constraints aren't met.
+type ResetPasswordRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -650,22 +517,24 @@ type ResetPINRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e ResetPINRequestValidationError) Field() string { return e.field }
+func (e ResetPasswordRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ResetPINRequestValidationError) Reason() string { return e.reason }
+func (e ResetPasswordRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ResetPINRequestValidationError) Cause() error { return e.cause }
+func (e ResetPasswordRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ResetPINRequestValidationError) Key() bool { return e.key }
+func (e ResetPasswordRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ResetPINRequestValidationError) ErrorName() string { return "ResetPINRequestValidationError" }
+func (e ResetPasswordRequestValidationError) ErrorName() string {
+	return "ResetPasswordRequestValidationError"
+}
 
 // Error satisfies the builtin error interface
-func (e ResetPINRequestValidationError) Error() string {
+func (e ResetPasswordRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -677,14 +546,14 @@ func (e ResetPINRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sResetPINRequest.%s: %s%s",
+		"invalid %sResetPasswordRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ResetPINRequestValidationError{}
+var _ error = ResetPasswordRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -692,24 +561,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ResetPINRequestValidationError{}
+} = ResetPasswordRequestValidationError{}
 
-// Validate checks the field values on ResetPINResponse with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *ResetPINResponse) Validate() error {
+// Validate checks the field values on ResetPasswordResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ResetPasswordResponse) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ResetPINResponse with the rules
+// ValidateAll checks the field values on ResetPasswordResponse with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// ResetPINResponseMultiError, or nil if none found.
-func (m *ResetPINResponse) ValidateAll() error {
+// ResetPasswordResponseMultiError, or nil if none found.
+func (m *ResetPasswordResponse) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ResetPINResponse) validate(all bool) error {
+func (m *ResetPasswordResponse) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -723,19 +592,19 @@ func (m *ResetPINResponse) validate(all bool) error {
 	// no validation rules for VerificationCode
 
 	if len(errors) > 0 {
-		return ResetPINResponseMultiError(errors)
+		return ResetPasswordResponseMultiError(errors)
 	}
 
 	return nil
 }
 
-// ResetPINResponseMultiError is an error wrapping multiple validation errors
-// returned by ResetPINResponse.ValidateAll() if the designated constraints
-// aren't met.
-type ResetPINResponseMultiError []error
+// ResetPasswordResponseMultiError is an error wrapping multiple validation
+// errors returned by ResetPasswordResponse.ValidateAll() if the designated
+// constraints aren't met.
+type ResetPasswordResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ResetPINResponseMultiError) Error() string {
+func (m ResetPasswordResponseMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -744,11 +613,11 @@ func (m ResetPINResponseMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ResetPINResponseMultiError) AllErrors() []error { return m }
+func (m ResetPasswordResponseMultiError) AllErrors() []error { return m }
 
-// ResetPINResponseValidationError is the validation error returned by
-// ResetPINResponse.Validate if the designated constraints aren't met.
-type ResetPINResponseValidationError struct {
+// ResetPasswordResponseValidationError is the validation error returned by
+// ResetPasswordResponse.Validate if the designated constraints aren't met.
+type ResetPasswordResponseValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -756,22 +625,24 @@ type ResetPINResponseValidationError struct {
 }
 
 // Field function returns field value.
-func (e ResetPINResponseValidationError) Field() string { return e.field }
+func (e ResetPasswordResponseValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ResetPINResponseValidationError) Reason() string { return e.reason }
+func (e ResetPasswordResponseValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ResetPINResponseValidationError) Cause() error { return e.cause }
+func (e ResetPasswordResponseValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ResetPINResponseValidationError) Key() bool { return e.key }
+func (e ResetPasswordResponseValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ResetPINResponseValidationError) ErrorName() string { return "ResetPINResponseValidationError" }
+func (e ResetPasswordResponseValidationError) ErrorName() string {
+	return "ResetPasswordResponseValidationError"
+}
 
 // Error satisfies the builtin error interface
-func (e ResetPINResponseValidationError) Error() string {
+func (e ResetPasswordResponseValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -783,14 +654,14 @@ func (e ResetPINResponseValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sResetPINResponse.%s: %s%s",
+		"invalid %sResetPasswordResponse.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ResetPINResponseValidationError{}
+var _ error = ResetPasswordResponseValidationError{}
 
 var _ interface {
 	Field() string
@@ -798,50 +669,52 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ResetPINResponseValidationError{}
+} = ResetPasswordResponseValidationError{}
 
-// Validate checks the field values on VerifyPINResetRequest with the rules
-// defined in the proto definition for this message. If any rules are
+// Validate checks the field values on VerifyPasswordResetRequest with the
+// rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *VerifyPINResetRequest) Validate() error {
+func (m *VerifyPasswordResetRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on VerifyPINResetRequest with the rules
-// defined in the proto definition for this message. If any rules are
+// ValidateAll checks the field values on VerifyPasswordResetRequest with the
+// rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// VerifyPINResetRequestMultiError, or nil if none found.
-func (m *VerifyPINResetRequest) ValidateAll() error {
+// VerifyPasswordResetRequestMultiError, or nil if none found.
+func (m *VerifyPasswordResetRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *VerifyPINResetRequest) validate(all bool) error {
+func (m *VerifyPasswordResetRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	// no validation rules for PhoneNumber
+	// no validation rules for Email
 
 	// no validation rules for VerificationCode
 
-	// no validation rules for NewPin
+	// no validation rules for ConfirmationPassword
+
+	// no validation rules for NewPassword
 
 	if len(errors) > 0 {
-		return VerifyPINResetRequestMultiError(errors)
+		return VerifyPasswordResetRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// VerifyPINResetRequestMultiError is an error wrapping multiple validation
-// errors returned by VerifyPINResetRequest.ValidateAll() if the designated
-// constraints aren't met.
-type VerifyPINResetRequestMultiError []error
+// VerifyPasswordResetRequestMultiError is an error wrapping multiple
+// validation errors returned by VerifyPasswordResetRequest.ValidateAll() if
+// the designated constraints aren't met.
+type VerifyPasswordResetRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m VerifyPINResetRequestMultiError) Error() string {
+func (m VerifyPasswordResetRequestMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -850,11 +723,11 @@ func (m VerifyPINResetRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m VerifyPINResetRequestMultiError) AllErrors() []error { return m }
+func (m VerifyPasswordResetRequestMultiError) AllErrors() []error { return m }
 
-// VerifyPINResetRequestValidationError is the validation error returned by
-// VerifyPINResetRequest.Validate if the designated constraints aren't met.
-type VerifyPINResetRequestValidationError struct {
+// VerifyPasswordResetRequestValidationError is the validation error returned
+// by VerifyPasswordResetRequest.Validate if the designated constraints aren't met.
+type VerifyPasswordResetRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -862,24 +735,24 @@ type VerifyPINResetRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e VerifyPINResetRequestValidationError) Field() string { return e.field }
+func (e VerifyPasswordResetRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e VerifyPINResetRequestValidationError) Reason() string { return e.reason }
+func (e VerifyPasswordResetRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e VerifyPINResetRequestValidationError) Cause() error { return e.cause }
+func (e VerifyPasswordResetRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e VerifyPINResetRequestValidationError) Key() bool { return e.key }
+func (e VerifyPasswordResetRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e VerifyPINResetRequestValidationError) ErrorName() string {
-	return "VerifyPINResetRequestValidationError"
+func (e VerifyPasswordResetRequestValidationError) ErrorName() string {
+	return "VerifyPasswordResetRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e VerifyPINResetRequestValidationError) Error() string {
+func (e VerifyPasswordResetRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -891,14 +764,14 @@ func (e VerifyPINResetRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sVerifyPINResetRequest.%s: %s%s",
+		"invalid %sVerifyPasswordResetRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = VerifyPINResetRequestValidationError{}
+var _ error = VerifyPasswordResetRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -906,4 +779,4 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = VerifyPINResetRequestValidationError{}
+} = VerifyPasswordResetRequestValidationError{}

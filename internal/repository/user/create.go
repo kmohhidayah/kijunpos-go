@@ -28,7 +28,7 @@ func (r *userRepository) Create(ctx context.Context, user *domain.User) error {
 		user.PasswordHash,
 		user.Email,
 		user.WhatsAppNumber,
-		user.PIN,
+		user.OTPPIN,
 		user.IsActive,
 		user.FailedLoginAttempts,
 		user.CreatedAt,

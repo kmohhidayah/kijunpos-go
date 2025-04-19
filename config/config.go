@@ -23,9 +23,18 @@ type (
 		IsEnabled   bool
 	}
 
+	Email struct {
+		SMTPHost     string
+		SMTPPort     string
+		SenderEmail  string
+		SenderName   string
+		SMTPPassword string
+	}
+
 	Config struct {
 		App       App
 		Otel      Otel
+		Email     Email
 		Databases []db.Config
 	}
 )
@@ -56,6 +65,13 @@ func LoadConfig() error {
 			URL:         getRequiredString("OTEL_URL"),
 			Insecure:    getRequiredBool("OTEL_INSECURE"),
 			IsEnabled:   getRequiredBool("OTEL_IS_ENABLED"),
+		},
+		Email: Email{
+			SMTPHost:     getRequiredString("EMAIL_SMTP_HOST"),
+			SMTPPort:     getRequiredString("EMAIL_SMTP_PORT"),
+			SenderEmail:  getRequiredString("EMAIL_SENDER_EMAIL"),
+			SenderName:   getRequiredString("EMAIL_SENDER_NAME"),
+			SMTPPassword: getRequiredString("EMAIL_SMTP_PASSWORD"),
 		},
 		Databases: []db.Config{
 			{

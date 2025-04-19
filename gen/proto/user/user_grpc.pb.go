@@ -19,10 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UserService_Register_FullMethodName       = "/user.UserService/Register"
-	UserService_Login_FullMethodName          = "/user.UserService/Login"
-	UserService_ResetPIN_FullMethodName       = "/user.UserService/ResetPIN"
-	UserService_VerifyPINReset_FullMethodName = "/user.UserService/VerifyPINReset"
+	UserService_Register_FullMethodName            = "/user.UserService/Register"
+	UserService_Login_FullMethodName               = "/user.UserService/Login"
+	UserService_ResetPassword_FullMethodName       = "/user.UserService/ResetPassword"
+	UserService_VerifyPasswordReset_FullMethodName = "/user.UserService/VerifyPasswordReset"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -30,9 +30,9 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*GeneralResponse, error)
-	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
-	ResetPIN(ctx context.Context, in *ResetPINRequest, opts ...grpc.CallOption) (*ResetPINResponse, error)
-	VerifyPINReset(ctx context.Context, in *VerifyPINResetRequest, opts ...grpc.CallOption) (*GeneralResponse, error)
+	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*GeneralResponse, error)
+	ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*ResetPasswordResponse, error)
+	VerifyPasswordReset(ctx context.Context, in *VerifyPasswordResetRequest, opts ...grpc.CallOption) (*GeneralResponse, error)
 }
 
 type userServiceClient struct {
@@ -53,9 +53,9 @@ func (c *userServiceClient) Register(ctx context.Context, in *RegisterRequest, o
 	return out, nil
 }
 
-func (c *userServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
+func (c *userServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*GeneralResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(LoginResponse)
+	out := new(GeneralResponse)
 	err := c.cc.Invoke(ctx, UserService_Login_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -63,20 +63,20 @@ func (c *userServiceClient) Login(ctx context.Context, in *LoginRequest, opts ..
 	return out, nil
 }
 
-func (c *userServiceClient) ResetPIN(ctx context.Context, in *ResetPINRequest, opts ...grpc.CallOption) (*ResetPINResponse, error) {
+func (c *userServiceClient) ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*ResetPasswordResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ResetPINResponse)
-	err := c.cc.Invoke(ctx, UserService_ResetPIN_FullMethodName, in, out, cOpts...)
+	out := new(ResetPasswordResponse)
+	err := c.cc.Invoke(ctx, UserService_ResetPassword_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userServiceClient) VerifyPINReset(ctx context.Context, in *VerifyPINResetRequest, opts ...grpc.CallOption) (*GeneralResponse, error) {
+func (c *userServiceClient) VerifyPasswordReset(ctx context.Context, in *VerifyPasswordResetRequest, opts ...grpc.CallOption) (*GeneralResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GeneralResponse)
-	err := c.cc.Invoke(ctx, UserService_VerifyPINReset_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, UserService_VerifyPasswordReset_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -88,9 +88,9 @@ func (c *userServiceClient) VerifyPINReset(ctx context.Context, in *VerifyPINRes
 // for forward compatibility.
 type UserServiceServer interface {
 	Register(context.Context, *RegisterRequest) (*GeneralResponse, error)
-	Login(context.Context, *LoginRequest) (*LoginResponse, error)
-	ResetPIN(context.Context, *ResetPINRequest) (*ResetPINResponse, error)
-	VerifyPINReset(context.Context, *VerifyPINResetRequest) (*GeneralResponse, error)
+	Login(context.Context, *LoginRequest) (*GeneralResponse, error)
+	ResetPassword(context.Context, *ResetPasswordRequest) (*ResetPasswordResponse, error)
+	VerifyPasswordReset(context.Context, *VerifyPasswordResetRequest) (*GeneralResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -104,14 +104,14 @@ type UnimplementedUserServiceServer struct{}
 func (UnimplementedUserServiceServer) Register(context.Context, *RegisterRequest) (*GeneralResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
-func (UnimplementedUserServiceServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
+func (UnimplementedUserServiceServer) Login(context.Context, *LoginRequest) (*GeneralResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
-func (UnimplementedUserServiceServer) ResetPIN(context.Context, *ResetPINRequest) (*ResetPINResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ResetPIN not implemented")
+func (UnimplementedUserServiceServer) ResetPassword(context.Context, *ResetPasswordRequest) (*ResetPasswordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetPassword not implemented")
 }
-func (UnimplementedUserServiceServer) VerifyPINReset(context.Context, *VerifyPINResetRequest) (*GeneralResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method VerifyPINReset not implemented")
+func (UnimplementedUserServiceServer) VerifyPasswordReset(context.Context, *VerifyPasswordResetRequest) (*GeneralResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VerifyPasswordReset not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 func (UnimplementedUserServiceServer) testEmbeddedByValue()                     {}
@@ -170,38 +170,38 @@ func _UserService_Login_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_ResetPIN_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ResetPINRequest)
+func _UserService_ResetPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetPasswordRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).ResetPIN(ctx, in)
+		return srv.(UserServiceServer).ResetPassword(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserService_ResetPIN_FullMethodName,
+		FullMethod: UserService_ResetPassword_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).ResetPIN(ctx, req.(*ResetPINRequest))
+		return srv.(UserServiceServer).ResetPassword(ctx, req.(*ResetPasswordRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_VerifyPINReset_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(VerifyPINResetRequest)
+func _UserService_VerifyPasswordReset_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifyPasswordResetRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).VerifyPINReset(ctx, in)
+		return srv.(UserServiceServer).VerifyPasswordReset(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserService_VerifyPINReset_FullMethodName,
+		FullMethod: UserService_VerifyPasswordReset_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).VerifyPINReset(ctx, req.(*VerifyPINResetRequest))
+		return srv.(UserServiceServer).VerifyPasswordReset(ctx, req.(*VerifyPasswordResetRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -222,12 +222,12 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_Login_Handler,
 		},
 		{
-			MethodName: "ResetPIN",
-			Handler:    _UserService_ResetPIN_Handler,
+			MethodName: "ResetPassword",
+			Handler:    _UserService_ResetPassword_Handler,
 		},
 		{
-			MethodName: "VerifyPINReset",
-			Handler:    _UserService_VerifyPINReset_Handler,
+			MethodName: "VerifyPasswordReset",
+			Handler:    _UserService_VerifyPasswordReset_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
