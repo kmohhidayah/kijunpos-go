@@ -14,9 +14,27 @@ type (
 		Name    string
 		Version string
 	}
+	Otel struct {
+		ApiKey      string
+		Env         string
+		ServiceName string
+		URL         string
+		Insecure    bool
+		IsEnabled   bool
+	}
+
+	Email struct {
+		SMTPHost     string
+		SMTPPort     string
+		SenderEmail  string
+		SenderName   string
+		SMTPPassword string
+	}
 
 	Config struct {
 		App       App
+		Otel      Otel
+		Email     Email
 		Databases []db.Config
 	}
 )
@@ -39,6 +57,21 @@ func LoadConfig() error {
 			Env:     getRequiredString("APP_ENV"),
 			Name:    getRequiredString("APP_NAME"),
 			Version: getRequiredString("APP_VERSION"),
+		},
+		Otel: Otel{
+			ApiKey:      getRequiredString("OTEL_API_KEY"),
+			Env:         getRequiredString("APP_ENV"),
+			ServiceName: fmt.Sprintf("%s-%s", getRequiredString("APP_NAME"), getRequiredString("APP_ENV")),
+			URL:         getRequiredString("OTEL_URL"),
+			Insecure:    getRequiredBool("OTEL_INSECURE"),
+			IsEnabled:   getRequiredBool("OTEL_IS_ENABLED"),
+		},
+		Email: Email{
+			SMTPHost:     getRequiredString("EMAIL_SMTP_HOST"),
+			SMTPPort:     getRequiredString("EMAIL_SMTP_PORT"),
+			SenderEmail:  getRequiredString("EMAIL_SENDER_EMAIL"),
+			SenderName:   getRequiredString("EMAIL_SENDER_NAME"),
+			SMTPPassword: getRequiredString("EMAIL_SMTP_PASSWORD"),
 		},
 		Databases: []db.Config{
 			{

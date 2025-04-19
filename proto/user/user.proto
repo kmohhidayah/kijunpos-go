@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "./user";
+
+service UserService {
+  rpc Register(RegisterRequest) returns (GeneralResponse) {}
+  rpc Login(LoginRequest) returns (GeneralResponse) {}
+  rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse) {}
+  rpc VerifyPasswordReset(VerifyPasswordResetRequest) returns (GeneralResponse) {}
+}
+
+message GeneralResponse {
+  string message = 1;
+  bool success = 2;
+}
+
+message RegisterRequest {
+  string name = 1;
+  string email = 2;
+  string phone_number = 3;
+  string password = 4;
+}
+
+message LoginRequest {
+  // Auth type: "email" or "whatsapp"
+  string auth_type = 1;
+  // Identifier: username/email for email auth, phone number for whatsapp auth
+  string identifier = 2;
+  // Credential: password for email auth, PIN for whatsapp auth
+  string credential = 3;
+}
+
+message UserData {
+  string id = 1;
+  string username = 2;
+  string email = 3;
+  string phone_number = 4;
+}
+
+message ResetPasswordRequest {
+  string email = 1;
+}
+
+message ResetPasswordResponse {
+  bool success = 1;
+  string message = 2;
+  string verification_code = 3; // for testing purposes only
+}
+
+message VerifyPasswordResetRequest {
+  string email = 1;
+  string verification_code = 2;
+  string confirmation_password = 3;
+  string new_password = 4;
+}

@@ -3,19 +3,34 @@ services:
     build: .
     ports:
       - 50051:50051
-    environment:
-      - DB_HOST=postgres
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
     depends_on:
       postgres:
         condition: service_healthy
+      jaeger:
+        condition: service_started
+    environment:
+      - APP_PORT=50051
+      - APP_NAME=kijun-pos
+      - APP_ENV=development
+      - APP_VERSION=0.0.1
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - KIJUNDB_URL=postgres://${DB_USER}:${DB_PASSWORD}@postgres/${DB_NAME}
+      - KIJUNDB_MAX_IDLE_CONNECTIONS=10
+      - KIJUNDB_MAX_OPEN_CONNECTIONS=100
+      - OTEL_API_KEY=-
+      - OTEL_URL=http://jaeger:4318
+      - OTEL_INSECURE=true
+      - OTEL_IS_ENABLED=true
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318
 
   postgres:
     image: postgres:14.13
     ports:
-      - 5434:5432
+      - 5432:5432
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
@@ -29,5 +44,34 @@ services:
       timeout: 5s
       retries: 5
 
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"  # UI port
+      - "14250:14250"  # gRPC port
+      - "4318:4318"    # OTLP HTTP port
+    environment:
+      - COLLECTOR_OTLP_ENABLED=${OTEL_IS_ENABLED}
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:16686"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      jaeger:
+        condition: service_started
+
 volumes:
   postgres_data:
+  grafana_data:
